@@ -66,6 +66,19 @@ npm run build
 
 # Deploy to S3 bucket
 aws s3 sync dist/ s3://best-ball-rosters-static-site --delete
+
+# Invalidate CloudFront cache to serve new content immediately
+aws cloudfront create-invalidation --distribution-id EFRKK2JI0PW1Z --paths "/*"
+```
+
+**Or use the deployment script:**
+
+```bash
+# Make script executable (Linux/Mac)
+chmod +x deploy.sh
+
+# Run deployment script
+./deploy.sh
 ```
 
 ### 3. Get Deployment URL
