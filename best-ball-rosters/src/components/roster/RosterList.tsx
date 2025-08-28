@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import type { RosterWithStats } from '../../types';
 import { RosterCard } from './RosterCard';
 
@@ -15,6 +15,33 @@ export const RosterList: React.FC<RosterListProps> = ({
   error = null,
   emptyMessage = "No rosters found matching your criteria."
 }) => {
+  const [expandedRosters, setExpandedRosters] = useState<Set<number>>(new Set());
+  const [allExpanded, setAllExpanded] = useState(false);
+
+  const toggleRoster = useCallback((rosterId: number) => {
+    setExpandedRosters(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(rosterId)) {
+        newSet.delete(rosterId);
+      } else {
+        newSet.add(rosterId);
+      }
+      return newSet;
+    });
+  }, []);
+
+  const toggleAllRosters = useCallback(() => {
+    if (allExpanded) {
+      // Collapse all
+      setExpandedRosters(new Set());
+      setAllExpanded(false);
+    } else {
+      // Expand all
+      const allRosterIds = new Set(rosters.map(roster => roster.LineupId));
+      setExpandedRosters(allRosterIds);
+      setAllExpanded(true);
+    }
+  }, [rosters, allExpanded]);
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -50,8 +77,15 @@ export const RosterList: React.FC<RosterListProps> = ({
         <div className="text-sm text-gray-600">
           Showing {rosters.length} roster{rosters.length !== 1 ? 's' : ''}
         </div>
-        <div className="text-sm text-gray-500">
-          {rosters.length > 1 && 'Click to expand individual rosters'}
+        <div className="flex items-center space-x-4">
+          {rosters.length > 1 && (
+            <button
+              onClick={toggleAllRosters}
+              className="px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors duration-200"
+            >
+              {allExpanded ? 'Collapse All' : 'Expand All'}
+            </button>
+          )}
         </div>
       </div>
 
@@ -61,6 +95,8 @@ export const RosterList: React.FC<RosterListProps> = ({
           <RosterCard 
             key={roster.LineupId} 
             roster={roster}
+            isExpanded={expandedRosters.has(roster.LineupId)}
+            onToggleExpanded={() => toggleRoster(roster.LineupId)}
           />
         ))}
       </div>

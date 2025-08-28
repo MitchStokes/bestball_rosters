@@ -5,13 +5,28 @@ import { PlayerCard } from '../player/PlayerCard';
 interface RosterCardProps {
   roster: RosterWithStats;
   showExpanded?: boolean;
+  isExpanded?: boolean;
+  onToggleExpanded?: () => void;
 }
 
 export const RosterCard: React.FC<RosterCardProps> = ({ 
   roster, 
-  showExpanded = true 
+  showExpanded = true,
+  isExpanded: externalIsExpanded,
+  onToggleExpanded
 }) => {
-  const [isExpanded, setIsExpanded] = useState(showExpanded);
+  const [internalIsExpanded, setInternalIsExpanded] = useState(showExpanded);
+  
+  // Use external state if provided, otherwise use internal state
+  const isExpanded = externalIsExpanded !== undefined ? externalIsExpanded : internalIsExpanded;
+  
+  const handleToggle = () => {
+    if (onToggleExpanded) {
+      onToggleExpanded();
+    } else {
+      setInternalIsExpanded(!internalIsExpanded);
+    }
+  };
   
   const positions = ['QB', 'RB', 'WR', 'TE'];
   
@@ -89,7 +104,7 @@ export const RosterCard: React.FC<RosterCardProps> = ({
         </div>
 
         <button
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={handleToggle}
           className="w-full px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors duration-200"
         >
           {isExpanded ? 'Hide Players ▲' : `Show All ${roster.Players.length} Players ▼`}
