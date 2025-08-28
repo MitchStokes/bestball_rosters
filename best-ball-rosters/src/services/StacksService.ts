@@ -39,7 +39,7 @@ export class StacksService {
     const playersByTeam: Record<string, PlayerWithADP[]> = {};
     
     roster.Players.forEach(player => {
-      const team = player.actualTeam || player.atabbr;
+      const team = (player as PlayerWithADP).actualTeam || player.atabbr;
       if (!playersByTeam[team]) {
         playersByTeam[team] = [];
       }

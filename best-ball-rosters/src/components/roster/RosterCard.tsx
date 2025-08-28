@@ -50,18 +50,7 @@ export const RosterCard: React.FC<RosterCardProps> = ({
     return adp === 0 ? '--' : adp.toFixed(1);
   };
 
-  const getValueGrade = (): { grade: string; color: string } | null => {
-    if (!roster.totalADP || roster.totalADP === 0) return null;
-    
-    // Lower total ADP = better value
-    // Rough grading: <1500=A, <2000=B, <2500=C, else D
-    if (roster.totalADP < 1500) return { grade: 'A', color: 'text-green-600' };
-    if (roster.totalADP < 2000) return { grade: 'B', color: 'text-blue-600' };
-    if (roster.totalADP < 2500) return { grade: 'C', color: 'text-yellow-600' };
-    return { grade: 'D', color: 'text-red-600' };
-  };
 
-  const valueGrade = getValueGrade();
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">

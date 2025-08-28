@@ -66,14 +66,6 @@ resource "aws_cloudfront_distribution" "static_site" {
   tags = var.tags
 
   viewer_certificate {
-    cloudfront_default_certificate = var.domain_name == "" ? true : false
-    
-    dynamic "viewer_certificate" {
-      for_each = var.domain_name != "" ? [1] : []
-      content {
-        acm_certificate_arn = aws_acm_certificate_validation.cert[0].certificate_arn
-        ssl_support_method  = "sni-only"
-      }
-    }
+    cloudfront_default_certificate = true
   }
 }

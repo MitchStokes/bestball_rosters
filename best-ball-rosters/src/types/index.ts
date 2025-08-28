@@ -59,10 +59,6 @@ export interface ADPEntry {
   Team: string;
 }
 
-export interface PlayerWithADP extends Player {
-  adp?: number;
-  adpRank?: number;
-}
 
 export interface RosterWithStats extends Roster {
   totalADP: number;
@@ -193,7 +189,7 @@ export interface PlayerWithADP extends Player {
   adpRank?: number;
   actualPosition?: string;
   actualTeam?: string;
-  byeWeek?: string;
+  byeWeek?: string | null;
 }
 
 export interface AppState {

@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "domain_name" {
   description = "Domain name for the website"
   type        = string
-  default     = "best-ball-rosters.com"
+  default     = ""
 }
 
 variable "bucket_name" {

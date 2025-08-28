@@ -1,4 +1,4 @@
-import type { RosterWithStats, FilterOptions, SortOptions, PlayerWithADP, PositionCounts } from '../types';
+import type { RosterWithStats, FilterOptions, SortOptions, PlayerWithADP } from '../types';
 
 export class FilterService {
   private static instance: FilterService;
@@ -27,7 +27,7 @@ export class FilterService {
         const rosterTeams = new Set<string>();
         roster.Players.forEach(player => {
           // Use actualTeam from draftables data, fallback to original team data
-          const actualTeam = player.actualTeam || player.atabbr;
+          const actualTeam = (player as PlayerWithADP).actualTeam || player.atabbr;
           rosterTeams.add(actualTeam);
         });
         
@@ -102,21 +102,13 @@ export class FilterService {
     const { field, direction } = sortOptions;
     
     return [...rosters].sort((a, b) => {
-      let valueA: number | string;
-      let valueB: number | string;
+      let valueA: number;
+      let valueB: number;
 
       switch (field) {
-        case 'totalADP':
-          valueA = a.totalADP;
-          valueB = b.totalADP;
-          break;
         case 'averageADP':
           valueA = a.averageADP;
           valueB = b.averageADP;
-          break;
-        case 'displayName':
-          valueA = a.DisplayName;
-          valueB = b.DisplayName;
           break;
         case 'lineupId':
           valueA = a.LineupId;
@@ -126,17 +118,8 @@ export class FilterService {
           return 0;
       }
 
-      if (typeof valueA === 'string' && typeof valueB === 'string') {
-        const comparison = valueA.localeCompare(valueB);
-        return direction === 'asc' ? comparison : -comparison;
-      }
-
-      if (typeof valueA === 'number' && typeof valueB === 'number') {
-        const comparison = valueA - valueB;
-        return direction === 'asc' ? comparison : -comparison;
-      }
-
-      return 0;
+      const comparison = valueA - valueB;
+      return direction === 'asc' ? comparison : -comparison;
     });
   }
 
@@ -180,8 +163,8 @@ export class FilterService {
 
     rosters.forEach(roster => {
       roster.Players.forEach(player => {
-        const actualTeam = player.actualTeam || player.atabbr;
-        const actualPosition = player.actualPosition || player.pn;
+        const actualTeam = (player as PlayerWithADP).actualTeam || player.atabbr;
+        const actualPosition = (player as PlayerWithADP).actualPosition || player.pn;
         
         teamsSet.add(actualTeam);
         positionsSet.add(actualPosition);
@@ -225,8 +208,8 @@ export class FilterService {
           if (!playersMap.has(key)) {
             playersMap.set(key, {
               name: playerName,
-              position: player.actualPosition || player.pn,
-              team: player.actualTeam || player.atabbr,
+              position: (player as PlayerWithADP).actualPosition || player.pn,
+              team: (player as PlayerWithADP).actualTeam || player.atabbr,
               count: 0
             });
           }

@@ -50,8 +50,6 @@ function App() {
     removeTeamFilter,
     addPlayerFilter,
     removePlayerFilter,
-    addPositionFilter,
-    removePositionFilter,
     setStackSizeFilter,
     setPositionCountFilter,
     clearPositionCountFilters,
@@ -142,13 +140,6 @@ function App() {
     }
   };
 
-  const handlePositionToggle = (position: string) => {
-    if (filters.positions.includes(position)) {
-      removePositionFilter(position);
-    } else {
-      addPositionFilter(position);
-    }
-  };
 
   const handleStackSizeChange = (min?: number, max?: number) => {
     setStackMinSize(min);

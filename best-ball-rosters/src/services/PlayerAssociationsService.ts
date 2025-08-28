@@ -53,7 +53,7 @@ export class PlayerAssociationsService {
     });
     
     return Array.from(playersMap.entries())
-      .map(([name, data]) => ({ name: data.player.fn + ' ' + data.player.ln, ...data }))
+      .map(([, data]) => ({ name: data.player.fn + ' ' + data.player.ln, ...data }))
       .sort((a, b) => b.count - a.count);
   }
 
@@ -196,8 +196,8 @@ export class PlayerAssociationsService {
           if (!playersMap.has(key)) {
             playersMap.set(key, {
               name: playerName,
-              position: player.actualPosition || player.pn,
-              team: player.actualTeam || player.atabbr,
+              position: (player as PlayerWithADP).actualPosition || player.pn,
+              team: (player as PlayerWithADP).actualTeam || player.atabbr,
               count: 0
             });
           }
