@@ -1,0 +1,11 @@
+# Copy this file to terraform.tfvars and customize the values
+
+aws_region  = "us-east-1"
+domain_name = "your-domain.com"  # Leave empty to use CloudFront default domain
+bucket_name = "your-unique-bucket-name"
+
+tags = {
+  Project     = "best-ball-rosters"
+  Environment = "production"
+  Owner       = "your-name"
+}
