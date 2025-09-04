@@ -1,4 +1,5 @@
 import type { Roster } from '../types';
+import { BEST_BALL_CONTEST_DRAFT_GROUP_ID } from '../constants';
 
 export class RosterService {
   private static instance: RosterService;
@@ -25,8 +26,10 @@ export class RosterService {
       }
       
       const data = await response.json();
-      this.cache = data;
-      return data;
+      this.cache = data.filter((roster: Roster) => 
+        roster.ContestDraftGroupId === BEST_BALL_CONTEST_DRAFT_GROUP_ID
+      );
+      return this.cache;
     } catch (error) {
       console.error('Error loading rosters:', error);
       throw new Error('Failed to load roster data');
